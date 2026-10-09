@@ -1,0 +1,16 @@
+{
+  "name": "music-search",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Catálogo de karaokê para consulta na rede local",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node server.js",
+    "demo": "node server.js --demo",
+    "test": "node --test",
+    "qr": "node scripts/export-qr.js"
+  },
+  "overrides": { "exceljs": { "uuid": "11.1.1" } },
+  "dependencies": { "exceljs": "4.4.0", "qrcode": "1.5.4" },
+  "devDependencies": { "jsqr": "1.4.0", "pngjs": "7.0.0" }
+}

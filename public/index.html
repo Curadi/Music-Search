@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f5f0">
+  <meta name="description" content="Encontre sua próxima música no catálogo de karaokê do bar.">
+  <title>Music Search · Sua próxima música</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Music Search, início"><span class="brand-icon" aria-hidden="true">♫</span> music<span class="brand-light">search</span><span class="brand-dot">.</span></a>
+    <span class="local-label"><span class="status-dot"></span> Karaokê do bar</span>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span aria-hidden="true">✦</span> O PALCO É SEU</p>
+        <h1 id="hero-title">Sua próxima música<br>começa <span>aqui.</span></h1>
+        <p class="hero-description">Do clássico que todo mundo canta à sua favorita.<br class="desktop-break"> Encontre uma música, escolha e solte a voz.</p>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <span class="floating-note note-one">♪</span><span class="floating-note note-two">♫</span>
+        <div class="record"><div class="record-label"><span>music<br>search</span><i></i></div></div>
+        <span class="art-caption">BOAS MÚSICAS. BOAS HISTÓRIAS.</span>
+        <span class="art-spark">✦</span>
+      </div>
+    </section>
+
+    <section class="search-panel" aria-label="Buscar no catálogo">
+      <form id="search-form" role="search">
+        <label for="search" class="sr-only">Nome da música, artista ou código</label>
+        <span class="search-icon" aria-hidden="true"></span>
+        <input id="search" name="q" type="search" placeholder="Qual música você quer cantar?" autocomplete="off" maxlength="256" enterkeyhint="search">
+        <button class="search-button" type="submit">Buscar <span class="arrow-icon" aria-hidden="true"></span></button>
+      </form>
+      <div class="search-tools">
+        <div class="filter-group" role="group" aria-label="Pesquisar em">
+          <button type="button" class="filter active" data-field="all" aria-pressed="true">Tudo</button>
+          <button type="button" class="filter" data-field="title" aria-pressed="false">Músicas</button>
+          <button type="button" class="filter" data-field="artist" aria-pressed="false">Artistas</button>
+        </div>
+        <span class="search-tip">Pode digitar sem acentos. A gente encontra.</span>
+      </div>
+    </section>
+
+    <aside id="notice" class="notice" hidden></aside>
+    <section class="catalog" aria-labelledby="catalog-title">
+      <div class="catalog-heading">
+        <div><p class="eyebrow catalog-eyebrow">ESCOLHA O SEU MOMENTO</p><h2 id="catalog-title">Explore o repertório<span class="count" id="count">—</span></h2></div>
+        <button type="button" class="refresh-button" id="refresh"><span aria-hidden="true">⟳</span> Atualizar catálogo</button>
+      </div>
+      <p id="result-description" class="result-description" aria-live="polite" role="status">Consultando as músicas disponíveis…</p>
+      <ul id="songs" class="song-grid" aria-label="Músicas disponíveis" aria-busy="true"></ul>
+      <div id="empty" class="empty-state" hidden><span class="empty-icon" aria-hidden="true">♫</span><h3 id="empty-title">Ainda não encontramos essa música</h3><p id="empty-description">Tente outro trecho do nome ou procure pelo artista.</p><button id="clear-search" class="outline-button" type="button">Ver todas as músicas</button></div>
+      <div class="load-more-wrap"><button type="button" id="load-more" class="outline-button" hidden>Carregar mais músicas <span aria-hidden="true">↓</span></button></div>
+      <div class="catalog-footer"><span><span class="status-dot" id="catalog-dot"></span><span id="updated">Aguardando catálogo</span></span><span>Atualização automática a cada 30s</span></div>
+    </section>
+    <section class="suggestion-banner" aria-label="Sugestões de músicas"><div><p class="eyebrow">AJUDE A AUMENTAR O REPERTÓRIO</p><h3>Faltou a sua favorita?</h3><p>Conte qual música você gostaria de cantar por aqui.</p></div><button type="button" id="open-suggestion" class="outline-button">Sugerir uma música <span class="arrow-icon" aria-hidden="true"></span></button></section>
+    <section class="how-it-works" aria-label="Como funciona"><span class="how-icon" aria-hidden="true">✦</span><div><h3>Encontrou a sua música?</h3><p>Anote o nome ou o código e fale com a equipe do bar. O próximo show pode ser seu.</p></div><span class="how-note" aria-hidden="true">♪</span></section>
+  </main>
+  <dialog id="suggestion-dialog" aria-labelledby="suggestion-title">
+    <div class="dialog-heading"><span class="eyebrow">A SUA VOZ TAMBÉM ESCOLHE</span><button id="close-suggestion" class="dialog-close" type="button" aria-label="Fechar sugestão">×</button></div>
+    <h2 id="suggestion-title">Qual música está faltando?</h2>
+    <p class="dialog-description">Envie uma sugestão para a equipe do bar. Ela será considerada para as próximas novidades do repertório.</p>
+    <form id="suggestion-form">
+      <label for="suggestion-song">Nome da música <span aria-hidden="true">*</span></label>
+      <input id="suggestion-song" name="title" required minlength="2" maxlength="120" placeholder="Ex.: Here Without You" autocomplete="off">
+      <label for="suggestion-artist">Cantor ou banda <span aria-hidden="true">*</span></label>
+      <input id="suggestion-artist" name="artist" required minlength="2" maxlength="120" placeholder="Ex.: 3 Doors Down" autocomplete="off">
+      <p class="form-note">Os dois campos são obrigatórios. Não é preciso se identificar.</p>
+      <p id="suggestion-feedback" role="status" aria-live="polite"></p>
+      <button id="send-suggestion" class="search-button" type="submit">Enviar sugestão <span class="arrow-icon" aria-hidden="true"></span></button>
+    </form>
+  </dialog>
+  <footer class="site-footer"><span>musicsearch<span class="brand-dot">.</span></span><p>Um repertório. Muitas vozes.</p><span class="footer-tag">FEITO PARA CANTAR</span></footer>
+</body>
+</html>

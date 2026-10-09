@@ -1,0 +1,24 @@
+MUSIC SEARCH — INÍCIO RÁPIDO
+
+1. Extraia TODO o ZIP para uma pasta em Documentos, fora da pasta de vídeos.
+2. Dê dois cliques em iniciar-music-search.bat.
+3. Cole o caminho da pasta de vídeos e escolha se quer bloquear o YouTube.
+   O bloqueio pede permissão de administrador do Windows.
+4. Aguarde a preparação automática. A primeira vez precisa de internet.
+5. Se houver várias redes, escolha o IP da rede do bar. Permita o Node.js no
+   Firewall para a rede privada. A tela de consulta abrirá no navegador.
+6. As imagens estão em data\qr. Use exportar-qr-code.bat para abrir a pasta.
+   Conecte um celular ao Wi-Fi do bar e teste o QR Code antes de imprimir.
+
+Mantenha a janela aberta. Encerre com Ctrl+C para remover o bloqueio normalmente.
+Após falta de energia/fechamento forçado, use restaurar-youtube.bat.
+Para trocar pasta/rede/bloqueio, use configurar-music-search.bat.
+
+Faça backup de data. Os relatórios Excel ficam em data\exports.
+Não apague data ao atualizar. Não compartilhe a pasta de vídeos com os clientes.
+Se o IP mudar, gere novamente o QR Code e substitua as cópias impressas.
+
+Requisitos: Windows 10/11 de 64 bits, x64 ou ARM64, pasta com permissão de gravação.
+O bloqueio de YouTube é simples: não garante bloquear VPN/proxy ou vídeos já
+carregados. O fluxo completo dos atalhos ainda precisa ser conferido no Windows.
+Leia README.md para detalhes e diagnóstico.
