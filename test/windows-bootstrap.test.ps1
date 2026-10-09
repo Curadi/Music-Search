@@ -8,6 +8,14 @@ foreach ($file in @("$repo/windows/Launcher.ps1", "$repo/windows/Bootstrap.psm1"
 }
 Import-Module "$repo/windows/Bootstrap.psm1" -Force -DisableNameChecking
 $module = Get-Module Bootstrap
+$networks = @(Convert-MusicSearchNetworkAddresses '[{"name":"Wi-Fi","address":"192.168.1.3"},{"name":"WSL","address":"172.30.0.1"}]')
+if ($networks.Count -ne 2 -or $networks[0].address -isnot [string] -or $networks[0].address -ne '192.168.1.3') { throw 'Lista de redes foi encapsulada em um array; Array.Address não é um IP.' }
+$single = @(Convert-MusicSearchNetworkAddresses '[{"name":"Wi-Fi","address":"192.168.1.3"}]')
+if ($single.Count -ne 1 -or $single[0].address -ne '192.168.1.3') { throw 'Rede única não reconhecida.' }
+if (@(Convert-MusicSearchNetworkAddresses '[]').Count -ne 0) { throw 'Lista vazia não reconhecida.' }
+$invalidRejected = $false
+try { Convert-MusicSearchNetworkAddresses '[{"name":"Wi-Fi","address":{}}]' } catch { $invalidRejected = $true }
+if (-not $invalidRejected) { throw 'Objeto inválido aceito como endereço.' }
 $root = Join-Path ([System.IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString())
 [System.IO.Directory]::CreateDirectory($root) | Out-Null
 try {

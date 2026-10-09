@@ -67,7 +67,7 @@ $env:PATH = (Split-Path $node -Parent) + ';' + $env:PATH
 Ensure-MusicSearchDependencies $projectRoot $node
 $addressesJson = & $node (Join-Path $projectRoot 'scripts/export-qr.js') --list
 if ($LASTEXITCODE -ne 0) { throw 'Não foi possível consultar os endereços de rede.' }
-$addresses = @($addressesJson | ConvertFrom-Json)
+$addresses = @(Convert-MusicSearchNetworkAddresses ($addressesJson -join "`n"))
 if ($addresses.Count -eq 0) { throw 'Conecte o computador à rede do bar e tente novamente. Nenhum IPv4 privado disponível.' }
 $savedAddress = @($addresses | Where-Object { $_.address -eq $settings.PublicHost })
 if ($addresses.Count -eq 1) { $chosen = $addresses[0].address }
@@ -79,6 +79,9 @@ else {
   $selection = 0
   if (-not [int]::TryParse($answer, [ref]$selection) -or $selection -lt 1 -or $selection -gt $addresses.Count) { throw 'Seleção inválida. Execute novamente.' }
   $chosen = $addresses[$selection - 1].address
+}
+if ($chosen -isnot [string] -or @($addresses | Where-Object { $_.address -ceq $chosen }).Count -eq 0) {
+  throw 'O IP escolhido não corresponde a uma rede ativa. Execute configurar-music-search.bat.'
 }
 $settings | Add-Member -NotePropertyName PublicHost -NotePropertyValue $chosen -Force
 if ($null -eq $settings.Port) { $settings | Add-Member -NotePropertyName Port -NotePropertyValue 3000 }

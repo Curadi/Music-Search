@@ -22,7 +22,7 @@ function Assert-ArchiveChecksum([string]$Archive, [string]$Expected) {
 }
 
 function Ensure-MusicSearchNode([string]$ProjectRoot) {
-  $command = Get-Command node -CommandType Application -ErrorAction SilentlyContinue
+  $command = Get-Command node -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
   if ($null -ne $command) {
     try {
       $version = & $command.Source --version
@@ -100,6 +100,20 @@ function Ensure-MusicSearchDependencies([string]$ProjectRoot, [string]$Node) {
   } finally { Pop-Location }
 }
 
+function Convert-MusicSearchNetworkAddresses([string]$Json) {
+  # Windows PowerShell 5.1 emits a JSON array as a single pipeline object.
+  # Enumerate explicitly so .address always refers to an entry, never Array.Address().
+  foreach ($entry in (ConvertFrom-Json -InputObject $Json)) {
+    $parsed = $null
+    if ($entry -isnot [pscustomobject] -or $entry.address -isnot [string] -or $entry.name -isnot [string] -or
+        -not [Net.IPAddress]::TryParse($entry.address, [ref]$parsed) -or
+        $parsed.AddressFamily -ne [Net.Sockets.AddressFamily]::InterNetwork) {
+      throw 'A lista de redes contém um endereço inválido.'
+    }
+    Write-Output $entry
+  }
+}
+
 function Save-MusicSearchSettings([string]$File, $Settings) {
   $parent = Split-Path $File -Parent
   [System.IO.Directory]::CreateDirectory($parent) | Out-Null
@@ -115,4 +129,4 @@ function Save-MusicSearchSettings([string]$File, $Settings) {
   } finally { if (Test-Path -LiteralPath $temporary) { Remove-Item -LiteralPath $temporary -Force } }
 }
 
-Export-ModuleMember -Function Ensure-MusicSearchNode, Ensure-MusicSearchDependencies, Save-MusicSearchSettings
+Export-ModuleMember -Function Ensure-MusicSearchNode, Ensure-MusicSearchDependencies, Save-MusicSearchSettings, Convert-MusicSearchNetworkAddresses
